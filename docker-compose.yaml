@@ -4,11 +4,11 @@ services:
 
   base: &base
     image: chatwoot/chatwoot:develop
-    env_file: .env ## Change this file for customized env variables
-    stdin_open: true # docker run -i
-    tty: true        # docker run -t
+    env_file: .env # Cambia este archivo para personalizar variables de entorno
+    stdin_open: true # Habilitar docker run -i
+    tty: true        # Habilitar docker run -t
     volumes:
-      - ./data/storage:/app/storage    
+      - ./data/storage:/app/storage # Persistencia de datos de almacenamiento
 
   rails:
     <<: *base
@@ -16,7 +16,7 @@ services:
       - postgres
       - redis
     ports:
-      - 3000:3000
+      - "35.198.4.51:3000:3000" # Vincular el puerto del contenedor al puerto de la IP pública
     environment:
       - NODE_ENV=production
       - RAILS_ENV=production   
@@ -37,7 +37,7 @@ services:
     image: postgres:15
     restart: always
     ports:
-      - '5432:5432'
+      - "35.198.4.51:5432:5432" # Exponer el puerto de PostgreSQL en la IP pública
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
     environment:
@@ -49,8 +49,8 @@ services:
     image: redis:alpine
     restart: always
     command: ["sh", "-c", "redis-server --requirepass \"$REDIS_PASSWORD\""]
-    env_file: .env ## Change this file for customized env variables
+    env_file: .env # Cambia este archivo para personalizar variables de entorno
     volumes:
       - ./data/redis:/data
     ports:
-      - '6379:6379'
+      - "35.198.4.51:6379:6379" # Exponer Redis en la IP pública
